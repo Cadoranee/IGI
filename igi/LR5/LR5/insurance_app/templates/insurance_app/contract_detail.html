@@ -1,0 +1,89 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="fas fa-file-contract me-2"></i>Договор №{{ contract.contract_number }}
+                    </h2>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-shield-alt me-2"></i>Вид страхования
+                                </h5>
+                                <p>{{ contract.insurance_type.name }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-building me-2"></i>Филиал
+                                </h5>
+                                <p>{{ contract.branch.name }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-user-tie me-2"></i>Страховой агент
+                                </h5>
+                                <p>{{ contract.agent.full_name }}</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-ruble-sign me-2"></i>Страховая сумма
+                                </h5>
+                                <p>{{ contract.insurance_sum }} руб.</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-percent me-2"></i>Тарифная ставка
+                                </h5>
+                                <p>{{ contract.tariff_rate }}%</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h5 class="text-primary">
+                                    <i class="fas fa-calendar-alt me-2"></i>Срок действия
+                                </h5>
+                                <p>с {{ contract.start_date|date:"d.m.Y" }} по {{ contract.end_date|date:"d.m.Y" }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">Расчет стоимости</h5>
+                                    <div class="mb-2">
+                                        <strong>Итоговая сумма к оплате:</strong>
+                                        <span class="text-primary">{{ contract.total_amount }} руб.</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <strong>Комиссия агента:</strong>
+                                        <span class="text-primary">{{ contract.agent_commission }} руб.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'insurance_app:contract_list' %}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Вернуться к списку договоров
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

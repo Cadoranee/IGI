@@ -1,0 +1,44 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">
+                        <i class="fas fa-shield-alt me-2"></i>{{ insurance_type.name }}
+                    </h2>
+                    
+                    <div class="mb-4">
+                        <h5 class="text-muted">Описание</h5>
+                        <p class="lead">{{ insurance_type.description }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="text-muted">Комиссия агента</h5>
+                        <p class="lead">{{ insurance_type.agent_commission }}%</p>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'insurance_app:create_contract' %}?insurance_type={{ insurance_type.id }}" 
+                               class="btn btn-primary btn-lg">
+                                <i class="fas fa-file-contract me-2"></i>Заключить договор
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Для заключения договора необходимо 
+                            <a href="{% url 'insurance_app:login' %}" class="alert-link">войти в систему</a>
+                            или 
+                            <a href="{% url 'insurance_app:register' %}" class="alert-link">зарегистрироваться</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

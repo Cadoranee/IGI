@@ -1,0 +1,93 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Остальной контент -->
+        <div class="col-md-12">
+            <h2 class="mb-4">Наши услуги</h2>
+        <div class="row">
+                {% for type in insurance_types %}
+            <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                    <div class="card-body">
+                            <h5 class="card-title">{{ type.name }}</h5>
+                            <p class="card-text">{{ type.description }}</p>
+                            <a href="{% url 'insurance_app:insurance_type_detail' type.id %}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center rounded-top">
+          <i class="bi bi-shield-lock" style="font-size: 2rem;"></i><br>
+          <strong>Виды страхования</strong>
+        </div>
+        <div class="card-body bg-white">
+          {% for t in insurance_types %}
+            <div class="mb-3">
+              <h6 class="mb-1">{{ t.name }}</h6>
+              <div class="small text-muted">{{ t.description }}</div>
+              <div class="text-secondary">Комиссия агента: {{ t.agent_commission }}%</div>
+            </div>
+            {% if not forloop.last %}<hr>{% endif %}
+          {% empty %}
+            <div class="text-muted">Нет данных</div>
+          {% endfor %}
+                        </div>
+                    </div>
+                </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center rounded-top">
+          <i class="bi bi-geo-alt" style="font-size: 2rem;"></i><br>
+          <strong>Филиалы</strong>
+        </div>
+        <div class="card-body bg-white">
+          {% for b in branches %}
+            <div class="mb-3">
+              <h6 class="mb-1">{{ b.name }}</h6>
+              <div class="small text-muted">{{ b.address }}</div>
+              <div class="text-secondary">Телефон: {{ b.phone }}</div>
+            </div>
+            {% if not forloop.last %}<hr>{% endif %}
+          {% empty %}
+            <div class="text-muted">Нет данных</div>
+            {% endfor %}
+        </div>
+                    </div>
+                </div>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-lg border-0">
+        <div class="card-header bg-success text-white text-center rounded-top">
+          <i class="bi bi-ticket-perforated" style="font-size: 2rem;"></i><br>
+          <strong>Промокоды</strong>
+        </div>
+        <div class="card-body bg-white">
+          {% for p in promocodes %}
+            <div class="mb-3">
+              <h6 class="mb-1">Код: <span class="badge bg-success fs-6">{{ p.code }}</span></h6>
+              <div class="small text-muted">{{ p.description }}</div>
+              <div class="fw-bold text-danger">Скидка: {{ p.discount_percent }}%</div>
+              <div class="text-secondary">Действует до: {{ p.valid_until|date:'d.m.Y' }}</div>
+            </div>
+            {% if not forloop.last %}<hr>{% endif %}
+          {% empty %}
+            <div class="text-muted">Нет данных</div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

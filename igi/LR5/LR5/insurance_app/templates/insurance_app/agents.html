@@ -1,0 +1,82 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+
+{% block title %}Наши агенты{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-5">Наши страховые агенты</h2>
+    
+    <div class="row">
+        {% for agent in agents %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm d-flex flex-column">
+                {% if agent.photo %}
+                    <img src="{{ agent.photo.url }}" class="card-img-top" alt="{{ agent.get_full_name }}" style="height: 300px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'images/default-agent.jpg' %}" class="card-img-top" alt="{{ agent.get_full_name }}" style="height: 300px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ agent.get_full_name }}</h5>
+                    <p class="card-text flex-grow-1">{{ agent.specialization }}</p>
+                    <div class="contact-info mt-3">
+                        <p class="mb-1"><i class="bi bi-telephone"></i> {{ agent.phone }}</p>
+                        <p class="mb-1"><i class="bi bi-envelope"></i> {{ agent.email }}</p>
+                        <p class="mb-1"><i class="bi bi-briefcase"></i> Опыт работы: {{ agent.experience_years }} лет</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                В данный момент нет активных агентов
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+        border: none;
+        border-radius: 15px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-img-top {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .card-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .card-text {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .contact-info {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+        margin-top: auto;
+    }
+    
+    .bi {
+        margin-right: 8px;
+        color: #2c3e50;
+    }
+</style>
+{% endblock %} 

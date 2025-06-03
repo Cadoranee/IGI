@@ -1,0 +1,27 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Виды страхования</h2>
+    
+    <div class="row">
+        {% for type in types %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ type.name }}</h5>
+                    <p class="card-text">{{ type.description }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">Комиссия агента: {{ type.agent_commission }}%</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">Нет доступных видов страхования</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

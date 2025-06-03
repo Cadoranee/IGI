@@ -1,0 +1,127 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .calendar-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .time-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .time-display {
+        font-size: 2em;
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    .timezone-display {
+        font-size: 1.2em;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Информация о пользователе -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о пользователе</h5>
+                    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Список договоров -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Мои договоры</h5>
+                    {% if contracts %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Номер</th>
+                                        <th>Тип</th>
+                                        <th>Дата начала</th>
+                                        <th>Дата окончания</th>
+                                        <th>Статус</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contract in contracts %}
+                                    <tr>
+                                        <td>{{ contract.contract_number }}</td>
+                                        <td>{{ contract.get_insurance_type_display }}</td>
+                                        <td>{{ contract.start_date|date:"d.m.Y" }}</td>
+                                        <td>{{ contract.end_date|date:"d.m.Y" }}</td>
+                                        <td>
+                                            {% if contract.is_active %}
+                                                <span class="badge bg-success">Активен</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Неактивен</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>У вас пока нет договоров.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+<script>
+    // Инициализация календаря
+    flatpickr("#calendar", {
+        locale: "ru",
+        dateFormat: "d.m.Y",
+        defaultDate: "today",
+        inline: true
+    });
+
+    // Функция обновления времени
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        document.getElementById('current-time').textContent = timeString;
+        document.getElementById('timezone').textContent = timezone;
+    }
+
+    // Обновляем время каждую секунду
+    updateTime();
+    setInterval(updateTime, 1000);
+</script>
+{% endblock %} 

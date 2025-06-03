@@ -1,0 +1,65 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block title %}Политика конфиденциальности{% endblock %}
+
+{% block content %}
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(44, 62, 80, 0.1);
+    }
+    
+    .card-header {
+        background-color: #2c3e50 !important;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1.5rem;
+    }
+    
+    .card-header h4 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    .card-body {
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 0 0 10px 10px;
+    }
+    
+    .lead {
+        color: #2c3e50;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .bi-tools {
+        color: #2c3e50;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+    
+    .bi-tools:hover {
+        transform: rotate(15deg);
+        opacity: 1;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header text-white">
+                    <h4 class="mb-0"><i class="bi bi-shield-lock"></i> Политика конфиденциальности</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <p class="lead">Страница находится в разработке</p>
+                        <i class="bi bi-tools" style="font-size: 4rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

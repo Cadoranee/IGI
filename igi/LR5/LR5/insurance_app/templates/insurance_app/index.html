@@ -1,0 +1,41 @@
+{% extends 'insurance_app/base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Добро пожаловать в систему страхования</h2>
+                    <p class="card-text">Выберите интересующий вас раздел:</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Страховые продукты</h5>
+                                    <p class="card-text">Ознакомьтесь с нашими страховыми продуктами и выберите подходящий для вас.</p>
+                                    <a href="{% url 'insurance_app:insurance_types' %}" class="btn btn-primary">Перейти</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Личный кабинет</h5>
+                                    <p class="card-text">Управляйте своими договорами и личными данными.</p>
+                                    <a href="{% url 'insurance_app:profile' %}" class="btn btn-primary">Перейти</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

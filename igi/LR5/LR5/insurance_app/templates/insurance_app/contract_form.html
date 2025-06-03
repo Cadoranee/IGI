@@ -1,0 +1,226 @@
+{% extends 'insurance_app/base.html' %}
+{% load form_tags %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4 text-dark">
+                        <i class="fas fa-file-contract me-2"></i>Создание договора
+                    </h2>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.contract_number.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-hashtag me-2"></i>Номер договора
+                                    </label>
+                                    {{ form.contract_number }}
+                                    {% if form.contract_number.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.contract_number.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.insurance_type.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-shield-alt me-2"></i>Вид страхования
+                                    </label>
+                                    {{ form.insurance_type }}
+                                    {% if form.insurance_type.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.insurance_type.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.branch.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-building me-2"></i>Филиал
+                                    </label>
+                                    {{ form.branch }}
+                                    {% if form.branch.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.branch.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.agent.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-user-tie me-2"></i>Страховой агент
+                                    </label>
+                                    {{ form.agent }}
+                                    {% if form.agent.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.agent.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.insurance_sum.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-ruble-sign me-2"></i>Страховая сумма
+                                    </label>
+                                    {{ form.insurance_sum }}
+                                    {% if form.insurance_sum.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.insurance_sum.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.tariff_rate.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-percent me-2"></i>Тарифная ставка (%)
+                                    </label>
+                                    {{ form.tariff_rate }}
+                                    {% if form.tariff_rate.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.tariff_rate.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.start_date.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-calendar-alt me-2"></i>Дата начала
+                                    </label>
+                                    {{ form.start_date }}
+                                    {% if form.start_date.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.start_date.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="{{ form.end_date.id_for_label }}" class="form-label text-dark">
+                                        <i class="fas fa-calendar-alt me-2"></i>Дата окончания
+                                    </label>
+                                    {{ form.end_date }}
+                                    {% if form.end_date.errors %}
+                                        <div class="alert alert-danger mt-1">
+                                            {{ form.end_date.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Расчет итоговой суммы и комиссии -->
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-dark">Расчет стоимости</h5>
+                                        <div class="mb-2">
+                                            <strong>Итоговая сумма к оплате:</strong>
+                                            <span id="totalAmount" class="text-dark">0</span> руб.
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>Комиссия агента:</strong>
+                                            <span id="agentCommission" class="text-dark">0</span> руб.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i>Создать договор
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: #2c3e50;
+        box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #2c3e50;
+        border-color: #2c3e50;
+    }
+    
+    .btn-primary:hover {
+        background-color: #34495e;
+        border-color: #34495e;
+    }
+    
+    .card {
+        border-color: #e9ecef;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    
+    .form-control {
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .form-control:hover {
+        border-color: #2c3e50;
+    }
+</style>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const insuranceSumInput = document.querySelector('#id_insurance_sum');
+    const tariffRateInput = document.querySelector('#id_tariff_rate');
+    const insuranceTypeSelect = document.querySelector('#id_insurance_type');
+    const totalAmountSpan = document.querySelector('#totalAmount');
+    const agentCommissionSpan = document.querySelector('#agentCommission');
+
+    function calculateAmounts() {
+        const insuranceSum = parseFloat(insuranceSumInput.value) || 0;
+        const tariffRate = parseFloat(tariffRateInput.value) || 0;
+        const selectedOption = insuranceTypeSelect.options[insuranceTypeSelect.selectedIndex];
+        const agentCommissionRate = parseFloat(selectedOption.getAttribute('data-commission')) || 0;
+
+        const totalAmount = insuranceSum * (tariffRate / 100);
+        const agentCommission = totalAmount * (agentCommissionRate / 100);
+
+        totalAmountSpan.textContent = totalAmount.toFixed(2);
+        agentCommissionSpan.textContent = agentCommission.toFixed(2);
+    }
+
+    insuranceSumInput.addEventListener('input', calculateAmounts);
+    tariffRateInput.addEventListener('input', calculateAmounts);
+    insuranceTypeSelect.addEventListener('change', calculateAmounts);
+});
+</script>
+{% endblock %}
+{% endblock %} 

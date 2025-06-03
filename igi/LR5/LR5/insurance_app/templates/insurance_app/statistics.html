@@ -1,0 +1,298 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Статистика страховой компании</h2>
+    
+    <!-- Форма поиска и сортировки -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Поиск по имени, email или телефону" value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="sort" class="form-select">
+                        <option value="">Сортировка</option>
+                        <option value="name" {% if request.GET.sort == 'name' %}selected{% endif %}>По имени</option>
+                        <option value="age" {% if request.GET.sort == 'age' %}selected{% endif %}>По возрасту</option>
+                        <option value="contracts" {% if request.GET.sort == 'contracts' %}selected{% endif %}>По количеству договоров</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="order" class="form-select">
+                        <option value="asc" {% if request.GET.order == 'asc' %}selected{% endif %}>По возрастанию</option>
+                        <option value="desc" {% if request.GET.order == 'desc' %}selected{% endif %}>По убыванию</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Применить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Графики -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pie-chart"></i> Распределение по типам страхования
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="insuranceTypesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-bar-chart"></i> Распределение по возрасту
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="ageDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Общая статистика -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-graph-up"></i> Общая статистика
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Общая сумма страховых взносов</h6>
+                            <p class="mb-0">{{ total_premium|floatformat:2 }} BYN</p>
+                        </div>
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Средний страховой взнос</h6>
+                            <p class="mb-0">{{ avg_premium|floatformat:2 }} BYN</p>
+                        </div>
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Медианный страховой взнос</h6>
+                            <p class="mb-0">{{ median_premium|floatformat:2 }} BYN</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика по клиентам -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-people"></i> Статистика по клиентам
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Средний возраст клиентов</h6>
+                            <p class="mb-0">{{ avg_age|floatformat:1 }} лет</p>
+                        </div>
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Медианный возраст клиентов</h6>
+                            <p class="mb-0">{{ median_age|floatformat:1 }} лет</p>
+                        </div>
+                        <div class="list-group-item">
+                            <h6 class="mb-1">Количество клиентов</h6>
+                            <p class="mb-0">{{ clients|length }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Популярность типов страхования -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-bar-chart"></i> Популярность типов страхования
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for stat in insurance_types_stats %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ stat.name }}</h6>
+                                <small>{{ stat.count }} договоров</small>
+                            </div>
+                            <p class="mb-0">Общая сумма: {{ stat.total_premium|floatformat:2 }} BYN</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Наиболее прибыльный тип страхования -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-trophy"></i> Наиболее прибыльный тип страхования
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if most_profitable %}
+                    <div class="text-center">
+                        <h4 class="mb-3">{{ most_profitable.name }}</h4>
+                        <p class="mb-1">Количество договоров: {{ most_profitable.count }}</p>
+                        <p class="mb-0">Общая прибыль: {{ most_profitable.total_premium|floatformat:2 }} BYN</p>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Нет данных</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Список клиентов -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header" style="background-color: #2c3e50; color: white;">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person-lines-fill"></i> Список клиентов
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ФИО</th>
+                                    <th>Email</th>
+                                    <th>Телефон</th>
+                                    <th>Возраст</th>
+                                    <th>Количество договоров</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in clients %}
+                                <tr>
+                                    <td>{{ client.last_name }} {{ client.first_name }} {{ client.middle_name|default:'' }}</td>
+                                    <td>{{ client.email }}</td>
+                                    <td>{{ client.phone }}</td>
+                                    <td>
+                                        {% if client.date_of_birth %}
+                                            {{ client.date_of_birth|timesince }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ client.contract_count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Подключаем Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Скрипт для создания графиков -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // График распределения по типам страхования
+    const insuranceTypesCtx = document.getElementById('insuranceTypesChart').getContext('2d');
+    const insuranceTypesData = {
+        labels: [{% for stat in insurance_types_stats %}'{{ stat.name }}',{% endfor %}],
+        datasets: [{
+            data: [{% for stat in insurance_types_stats %}{{ stat.count }},{% endfor %}],
+            backgroundColor: [
+                '#2c3e50',
+                '#3498db',
+                '#e74c3c',
+                '#2ecc71',
+                '#f1c40f',
+                '#9b59b6'
+            ]
+        }]
+    };
+    
+    new Chart(insuranceTypesCtx, {
+        type: 'pie',
+        data: insuranceTypesData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+
+    // График распределения по возрасту
+    const ageDistributionCtx = document.getElementById('ageDistributionChart').getContext('2d');
+    const ageGroups = {
+        '18-25': 0,
+        '26-35': 0,
+        '36-45': 0,
+        '46-55': 0,
+        '56+': 0
+    };
+
+    {% for client in clients %}
+        {% if client.date_of_birth %}
+            {% with age=client.date_of_birth|timesince %}
+                {% if age <= 25 %}
+                    ageGroups['18-25']++;
+                {% elif age <= 35 %}
+                    ageGroups['26-35']++;
+                {% elif age <= 45 %}
+                    ageGroups['36-45']++;
+                {% elif age <= 55 %}
+                    ageGroups['46-55']++;
+                {% else %}
+                    ageGroups['56+']++;
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+    {% endfor %}
+
+    new Chart(ageDistributionCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(ageGroups),
+            datasets: [{
+                label: 'Количество клиентов',
+                data: Object.values(ageGroups),
+                backgroundColor: '#3498db'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

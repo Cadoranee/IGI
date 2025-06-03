@@ -1,0 +1,57 @@
+{% extends 'insurance_app/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="fas fa-user-tie me-2"></i>
+        Наши агенты
+    </h2>
+    <div class="row">
+        {% for agent in agents %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                {% if agent.photo %}
+                <img src="{{ agent.photo.url }}" class="card-img-top" alt="{{ agent.first_name }} {{ agent.last_name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-user-tie fa-4x text-muted"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title">{{ agent.first_name }} {{ agent.last_name }}</h4>
+                    <div class="card-text">
+                        <p class="mb-2">
+                            <i class="fas fa-briefcase me-2"></i>
+                            <strong>Опыт работы:</strong> {{ agent.years_of_experience }} лет
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-phone me-2"></i>
+                            <strong>Телефон:</strong> {{ agent.phone }}
+                        </p>
+                        <p class="mb-0">
+                            <i class="fas fa-envelope me-2"></i>
+                            <strong>Email:</strong> {{ agent.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .card-img-top {
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+    }
+</style>
+{% endblock %} 

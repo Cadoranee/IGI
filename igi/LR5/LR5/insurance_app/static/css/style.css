@@ -1,0 +1,53 @@
+.calendar-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.time-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.time-display {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.timezone-display {
+    font-size: 1em;
+    color: #666;
+}
+
+/* Стили для календаря Flatpickr */
+.flatpickr-calendar {
+    width: 100% !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.flatpickr-day.selected {
+    background: #007bff !important;
+    border-color: #007bff !important;
+}
+
+.flatpickr-day.today {
+    border-color: #007bff !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .calendar-container,
+    .time-container {
+        margin-bottom: 15px;
+    }
+    
+    .time-display {
+        font-size: 1.5em;
+    }
+} 
